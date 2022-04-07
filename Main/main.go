@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"net/http" // The net/http library is responsible for http connections
 	"os"
+	"time"
 )
 
 func main() {
@@ -49,7 +50,25 @@ func commandReading() int {
 
 func startingMonitoring() {
 	fmt.Println("Monitoring...")
-	site := "https://www.alura.com.br"
+	site := []string{"https://random-status-code.herokuapp.com/", "https://www.alura.com.br",
+		"https://www.caelum.com.br"} // Setting the URLs
 
-	http.Get(site)
+	for i, site := range site {
+		fmt.Println("Testing site", i, ":", site)
+		sites(site)
+		time.Sleep(2 * time.Second)
+	}
+
+}
+
+func sites(site string) {
+
+	resp, _ := http.Get(site)
+
+	// Get issues a GET to the specified URL
+	if resp.StatusCode == 200 { // StatusCode is a function from the net/http library responsible for the http statusCode
+		fmt.Println("Site:", site, "loaded with success")
+	} else {
+		fmt.Println("Site", site, "failed load. Status Code:", resp.StatusCode)
+	}
 }
