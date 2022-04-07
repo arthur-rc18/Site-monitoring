@@ -7,41 +7,41 @@ import (
 
 func main() {
 
-	exibeIntroducao()
-	exibeMenu()
-	comando := leComando()
+	introduction()
+	menuExhibition()
+	command := commandReading()
 
-	switch comando {
+	switch command {
 	case 1:
-		fmt.Println("Monitorando...")
+		fmt.Println("Monitoring...")
 	case 2:
-		fmt.Println("Exibindo Logs...")
+		fmt.Println("Showing logs...")
 	case 0:
-		fmt.Println("Saindo do programa")
+		fmt.Println("Exiting program")
 		os.Exit(0)
 	default:
-		fmt.Println("Não conheço este comando")
+		fmt.Println("Unknown command")
 		os.Exit(-1)
 	}
 }
 
-func exibeIntroducao() {
-	nome := "Douglas"
-	versao := 1.2
-	fmt.Println("Olá, sr.", nome)
-	fmt.Println("Este programa está na versão", versao)
+func introduction() {
+	name := "DOug"
+	version := 1.2
+	fmt.Println("Hello, mr.", name)
+	fmt.Println("Program's version", version)
 }
 
-func exibeMenu() {
-	fmt.Println("1- Iniciar Monitoramento")
-	fmt.Println("2- Exibir Logs")
-	fmt.Println("0- Sair do Programa")
+func menuExhibition() {
+	fmt.Println("1- Starting monitoring")
+	fmt.Println("2- Logs exhibition")
+	fmt.Println("0- Exit program")
 }
 
-func leComando() int {
-	var comandoLido int
-	fmt.Scan(&comandoLido)
-	fmt.Println("O comando escolhido foi", comandoLido)
+func commandReading() int {
+	var command int
+	fmt.Scan(&command)
+	fmt.Println("The chosen command was", command)
 
-	return comandoLido
+	return command
 }
