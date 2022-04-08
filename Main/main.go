@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"net/http" // The net/http library is responsible for http connections
 	"os"
+	"strings"
 	"time"
 )
 
@@ -68,13 +71,18 @@ func startingMonitoring() {
 
 		}
 		time.Sleep(3 * time.Second)
+		fmt.Println("")
 	}
 
 }
 
 func sites(site string) {
 
-	resp, _ := http.Get(site)
+	resp, err := http.Get(site)
+
+	if err != nil {
+		fmt.Println("Occurred an error:", err)
+	}
 
 	// Get issues a GET to the specified URL
 	if resp.StatusCode == 200 { // StatusCode is a function from the net/http library responsible for the http statusCode
@@ -90,11 +98,34 @@ func readFileSite() []string {
 
 	arch, err := os.Open("sites.txt")
 
+	// Handling if the file is nil
 	if err != nil {
 		fmt.Println("Occurred an error:", err)
 
 	}
 
-	fmt.Println(arch)
+	reader := bufio.NewReader(arch)
+
+	for {
+		// It will read the line til the end
+		line, err := reader.ReadString('\n')
+
+		// TrimSpace returns a slice of the string s, with all leading and trailing white space removed.
+		// This will make the code not jump a line.
+		line = strings.TrimSpace(line)
+
+		sites = append(sites, line)
+
+		// When readed all the lines, will return an error of EOF
+		// And here this error is being treated
+		if err == io.EOF {
+			break
+
+		}
+	}
+
+	// Closing the file
+	arch.Close()
+
 	return sites
 }
