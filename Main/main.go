@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http" // The net/http library is responsible for http connections
 	"os"
+	"strconv" // This library is responsible for convert different types into string
 	"strings"
 	"time"
 )
@@ -17,7 +18,7 @@ const monit int = 5
 func main() {
 
 	introduction()
-	readFileSite()
+	logRegister("fake-site", false)
 	menuExhibition()
 	command := commandReading()
 
@@ -59,8 +60,6 @@ func commandReading() int {
 
 func startingMonitoring() {
 	fmt.Println("Monitoring...")
-	// site := []string{"https://random-status-code.herokuapp.com/", "https://www.alura.com.br",
-	// 	"https://www.caelum.com.br"} // Setting the URLs
 
 	site := readFileSite()
 
@@ -87,8 +86,10 @@ func sites(site string) {
 	// Get issues a GET to the specified URL
 	if resp.StatusCode == 200 { // StatusCode is a function from the net/http library responsible for the http statusCode
 		fmt.Println("Site:", site, "loaded with success")
+		logRegister(site, true)
 	} else {
 		fmt.Println("Site", site, "failed load. Status Code:", resp.StatusCode)
+		logRegister(site, false)
 	}
 }
 
@@ -110,8 +111,8 @@ func readFileSite() []string {
 		// It will read the line til the end
 		line, err := reader.ReadString('\n')
 
-		// TrimSpace returns a slice of the string s, with all leading and trailing white space removed.
-		// This will make the code not jump a line.
+		// TrimSpace returns a slice of the string s, with all leading and trailing white space removed
+		// This will make the code not jump a line
 		line = strings.TrimSpace(line)
 
 		sites = append(sites, line)
@@ -128,4 +129,19 @@ func readFileSite() []string {
 	arch.Close()
 
 	return sites
+}
+
+func logRegister(site string, status bool) {
+
+	// With the OpenFile function, it's possible to create a file, passing the arguments
+	arch, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE, 0666)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	arch.WriteString(site + "- online: " + strconv.FormatBool(status))
+
+	arch.Close()
+
 }
