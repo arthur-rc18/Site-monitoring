@@ -7,9 +7,14 @@ import (
 	"time"
 )
 
+// Constants
+
+const monit int = 5
+
 func main() {
 
 	introduction()
+	readFileSite()
 	menuExhibition()
 	command := commandReading()
 
@@ -25,6 +30,7 @@ func main() {
 		fmt.Println("Unknown command")
 		os.Exit(-1)
 	}
+
 }
 
 func introduction() {
@@ -50,13 +56,18 @@ func commandReading() int {
 
 func startingMonitoring() {
 	fmt.Println("Monitoring...")
-	site := []string{"https://random-status-code.herokuapp.com/", "https://www.alura.com.br",
-		"https://www.caelum.com.br"} // Setting the URLs
+	// site := []string{"https://random-status-code.herokuapp.com/", "https://www.alura.com.br",
+	// 	"https://www.caelum.com.br"} // Setting the URLs
 
-	for i, site := range site {
-		fmt.Println("Testing site", i, ":", site)
-		sites(site)
-		time.Sleep(2 * time.Second)
+	site := readFileSite()
+
+	for i := 0; i < monit; i++ {
+		for i, urls := range site {
+			fmt.Println("Testing site", i, ":", urls)
+			sites(urls)
+
+		}
+		time.Sleep(3 * time.Second)
 	}
 
 }
@@ -71,4 +82,18 @@ func sites(site string) {
 	} else {
 		fmt.Println("Site", site, "failed load. Status Code:", resp.StatusCode)
 	}
+}
+
+func readFileSite() []string {
+
+	var sites []string
+
+	arch, err := os.Open("sites.txt")
+
+	if err != nil {
+		fmt.Println("Occurred an error:", err)
+	}
+
+	fmt.Println(arch)
+	return sites
 }
