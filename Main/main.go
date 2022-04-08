@@ -92,6 +92,7 @@ func readFileSite() []string {
 
 	if err != nil {
 		fmt.Println("Occurred an error:", err)
+
 	}
 
 	fmt.Println(arch)
