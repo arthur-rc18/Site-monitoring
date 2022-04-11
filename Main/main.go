@@ -12,8 +12,7 @@ import (
 	"time"
 )
 
-// Constants
-
+// Constant
 const monit int = 5
 
 func main() {
@@ -31,6 +30,12 @@ func main() {
 		case 2:
 			fmt.Println("Showing logs...")
 			printLogs()
+
+		case 3:
+			var x string
+			fmt.Println("Enter with the new url you want to monitor")
+			fmt.Scan(&x)
+			addUrl(x)
 		case 0:
 			fmt.Println("Exiting program")
 			os.Exit(0)
@@ -43,15 +48,13 @@ func main() {
 }
 
 func introduction() {
-	name := "Doug"
-	version := 1.2
-	fmt.Println("Hello, mr.", name)
-	fmt.Println("Program's version", version)
+	fmt.Println("Hello, here you can monitor your favorites site and also receive some logs")
 }
 
 func menuExhibition() {
 	fmt.Println("1- Start monitoring")
 	fmt.Println("2- Logs exhibition")
+	fmt.Println("3- Add an url")
 	fmt.Println("0- Exit program")
 }
 
@@ -148,7 +151,7 @@ func logRegister(site string, status bool) {
 	// The WriteString function allows to write in a file
 	// The way time.Now().Format() is being is to specify the date
 	// The 02 is days, 01 for morths, 2006 for long years, 15 for hours, 04 for minutes, 05 for seconds
-	arch.WriteString(time.Now().Format("02/01/2006 15:04:05") + "" + site + " - online: " + strconv.FormatBool(status) + "\n")
+	arch.WriteString(time.Now().Format("02/01/2006 15:04:05") + " " + site + " - online: " + strconv.FormatBool(status) + "\n")
 
 	arch.Close()
 
@@ -164,4 +167,17 @@ func printLogs() {
 
 	fmt.Println(string(arch))
 
+}
+
+// This function will automaticaly add a new url to the 'sites.txt' file
+func addUrl(url string) {
+	arch, err := os.OpenFile("sites.txt", os.O_RDWR|os.O_APPEND, 0666)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	arch.WriteString("\n" + url)
+
+	arch.Close()
 }
