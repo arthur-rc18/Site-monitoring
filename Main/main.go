@@ -18,7 +18,6 @@ const monit int = 5
 func main() {
 
 	introduction()
-	logRegister("fake-site", false)
 	menuExhibition()
 	command := commandReading()
 
@@ -134,13 +133,16 @@ func readFileSite() []string {
 func logRegister(site string, status bool) {
 
 	// With the OpenFile function, it's possible to create a file, passing the arguments
-	arch, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE, 0666)
+	arch, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	arch.WriteString(site + "- online: " + strconv.FormatBool(status))
+	// The WriteString function allows to write in a file
+	// The way time.Now().Format() is being is to specify the date
+	// The 02 is days, 01 for morths, 2006 for long years, 15 for hours, 04 for minutes, 05 for seconds
+	arch.WriteString(time.Now().Format("02/01/2006 15:04:05") + "" + site + " - online: " + strconv.FormatBool(status) + "\n")
 
 	arch.Close()
 
