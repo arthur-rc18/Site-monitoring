@@ -48,7 +48,7 @@ func main() {
 }
 
 func introduction() {
-	fmt.Println("Hello, here you can monitor your favorites site and also receive some logs")
+	fmt.Println("Hello, here you can monitor your favorites site and also receive some logs from it")
 }
 
 func menuExhibition() {
